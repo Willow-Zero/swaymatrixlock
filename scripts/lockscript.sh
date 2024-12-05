@@ -21,11 +21,12 @@ mtrx_command="kitty -c /home/<USER>/.config/swaylock/kittyconf.conf --start-as=f
 checkpid=$(pgrep swaylock) # Check if swaylock is running
 if ! [ -z $checkpid ]; then
 	#swayidle &
-	screens=$(hyprctl -j monitors | jq length) # Get the number of screens
-	for (( i = -1; i < $screens; i++ ))
-	do
-		sleep 0.3
-		hyprctl dispatch focusmonitor $i 
-		eval $mtrx_command & # Run the matrix script
-	done 
+	screens=$(swaymsg -t get_outputs | jq length) # Get the number of screens
+	eval $mtrx_command &
+#	for (( i = -1; i < $screens; i++ ))
+#	do
+#		sleep 0.3
+#		hyprctl dispatch focusmonitor $i 
+#		eval $mtrx_command & # Run the matrix script
+#	done 
 fi

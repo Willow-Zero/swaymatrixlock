@@ -1,6 +1,6 @@
 """
-Hyprmatrix lockscreen.
-This script is intended for hyprland compositor.
+Sway lockscreen.
+This script is intended for sway compositor.
 (You may use the files in the script folder of this repository to adapt to your Wayland environment)
 It will save two scripts and two config files on your swaylock directory. 
 Make sure you have already installed:
@@ -37,7 +37,7 @@ def directory(usr:str):
 # If the return from the OS is zero, the command has run successfully, therefore the packages exist
 def package_checking():
     print("Checking packages: ")
-    hyprctl = run('hyprctl version', shell=True, capture_output=True)
+    hyprctl = run('sway -v', shell=True, capture_output=True)
     swaylock = run('swaylock -v', shell=True, capture_output=True)
     kitty = run('kitty -v', shell=True, capture_output=True)
     unimatrix = run('unimatrix -h', shell=True, capture_output=True)
@@ -46,7 +46,7 @@ def package_checking():
     print("hyprland... ", end='')
     if hyprctl.returncode:
         print("Fail!")
-        print("Couldn't run 'hyprctl version', is hyprland installed?")
+        print("Couldn't run 'sway -v', is hyprland installed?")
         exit()
     print("OK")
     
@@ -203,13 +203,14 @@ mtrx_command="kitty -c {k_path} --start-as=fullscreen {m_path}"
 checkpid=$(pgrep swaylock) # Check if swaylock is running
 if ! [ -z $checkpid ]; then
 	#swayidle &
-	screens=$(hyprctl -j monitors | jq length) # Get the number of screens
-	for (( i = -1; i < $screens; i++ ))
-	do
-		sleep 0.3
-		hyprctl dispatch focusmonitor $i 
-		eval $mtrx_command & # Run the matrix script
-	done 
+	screens=$(swaymsg -t get_outputs | jq length) # Get the number of screens
+	eval $mtrx_command &
+#	for (( i = -1; i < $screens; i++ ))
+#	do
+#		sleep 0.3
+#		hyprctl dispatch focusmonitor $i 
+#		eval $mtrx_command & # Run the matrix script
+#	done 
 fi
 """
     return lockcript
@@ -217,8 +218,8 @@ fi
 
 #Presentation
 print("""
-Hyprmatrix lockscreen.
-This script is intended for hyprland compositor.
+Sway lockscreen.
+This script is intended for sway compositor.
 (You may use the files in the script folder of this repository to adapt to your Wayland environment)
 It will save two scripts and two config files on your swaylock directory. 
 Make sure you have already installed:
